@@ -6,13 +6,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,11 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.ViewSwitcher;
 
 import com.example.ahmed.orgattendanceapp.activities.EmployeeActivity;
@@ -54,9 +51,7 @@ import java.util.List;
 
 import butterknife.BindAnim;
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import dmax.dialog.SpotsDialog;
@@ -78,37 +73,6 @@ public class LoginActivity extends AppCompatActivity {
     Context context = null;
     Common common = null;
     boolean booleanDontClickMore1 = true, booleanDontClickMore2 = true;
-    Button.OnClickListener clickListenerShowEmployee = new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            if (viewSwitcher.getDisplayedChild() == 0) {
-                viewSwitcher.showNext();
-                switchEmployer.setChecked(false);
-                switchEmployee.setChecked(true);
-                //llSub.setBackgroundColor(getResources().getColor(R.color.CadetBlue));
-            }
-
-
-        }
-    };
-    Button.OnClickListener clickListenerShowEmployer = new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            if (viewSwitcher.getDisplayedChild() == 1) {
-                viewSwitcher.showPrevious();
-                switchEmployer.setChecked(true);
-                switchEmployee.setChecked(false);
-                //booleanDontClickMore1 = false;
-                //booleanDontClickMore2 = true_answer;
-                //llSub.setBackgroundColor(getResources().getColor(R.color.DarkGoldenrod));
-
-            }
-
-
-        }
-    };
     @BindView(R.id.fabAddNewEmail)
     FloatingActionButton fabAddNewEmail;
     @BindView(R.id.llMain)
@@ -167,7 +131,49 @@ public class LoginActivity extends AppCompatActivity {
     SwitchButton switchEmployee;
     @BindView(R.id.switchEmployer)
     SwitchButton switchEmployer;
+    Button.OnClickListener clickListenerShowEmployee = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
 
+            if (viewSwitcher.getDisplayedChild() == 0) {
+                viewSwitcher.showNext();
+
+                switchEmployer.setEnabled(true);
+                switchEmployer.setChecked(false);
+                switchEmployer.setEnabled(false);
+
+                switchEmployee.setEnabled(true);
+                switchEmployee.setChecked(true);
+                switchEmployee.setEnabled(false);
+                //llSub.setBackgroundColor(getResources().getColor(R.color.CadetBlue));
+            }
+
+
+        }
+    };
+    Button.OnClickListener clickListenerShowEmployer = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            if (viewSwitcher.getDisplayedChild() == 1) {
+                viewSwitcher.showPrevious();
+                switchEmployer.setEnabled(true);
+                switchEmployer.setChecked(true);
+                switchEmployer.setEnabled(false);
+
+                switchEmployee.setEnabled(true);
+                switchEmployee.setChecked(false);
+                switchEmployee.setEnabled(false);
+                //booleanDontClickMore1 = false;
+                //booleanDontClickMore2 = true_answer;
+                //llSub.setBackgroundColor(getResources().getColor(R.color.DarkGoldenrod));
+
+            }
+
+
+        }
+    };
+    String userType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +250,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                    if (dialogLogin.isShowing()) dialogLogin.dismiss();
+
                     Intent i = new Intent(getApplicationContext(), EmployerActivity.class);
                     startActivity(i);
                     finish();
@@ -252,6 +261,9 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                                if (dialogLogin.isShowing()) dialogLogin.dismiss();
+
                                 Intent i = new Intent(getApplicationContext(), EmployeeActivity.class);
                                 startActivity(i);
                                 finish();
@@ -290,8 +302,6 @@ public class LoginActivity extends AppCompatActivity {
         if (dialogLogin.isShowing()) dialogLogin.dismiss();
 
     }
-
-    String userType = "";
 
     private void createAccount() {
 
@@ -544,6 +554,9 @@ public class LoginActivity extends AppCompatActivity {
         layoutInflater = (LayoutInflater) getApplicationContext()//instead of getApplicationContext() -> mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+
+        switchEmployee.setEnabled(false);
+        switchEmployer.setEnabled(false);
 
     }
 

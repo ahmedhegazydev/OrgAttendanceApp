@@ -104,7 +104,6 @@ dependencies {
 
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
 
-
 }
 apply plugin: 'com.google.gms.google-services'
 configurations.all {

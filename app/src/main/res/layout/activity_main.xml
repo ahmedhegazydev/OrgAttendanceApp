@@ -47,7 +47,13 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/btnShowEmployer"
                     android:checked="true"
-                    android:enabled="false" />
+                    android:clickable="false"
+                    android:enabled="false"
+                    app:sb_checked="true"
+                    app:sb_enable_effect="true"
+
+
+                    />
 
                 <Button
                     android:id="@+id/btnShowEmployer"
