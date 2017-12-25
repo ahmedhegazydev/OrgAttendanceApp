@@ -175,12 +175,12 @@ public class LoginActivity extends AppCompatActivity {
     };
     String userType = "";
 
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
         init();
         initViewSwitcherAcccount();
         initLoginAccount();
-
+        checkSessionForUser();
 
     }
 
@@ -204,6 +204,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    private void checkSessionForUser() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            dialogLogin = new SpotsDialog(context, "....");
+            dialogLogin.show();
+            checkIfEmployeeOrEmployer(FirebaseAuth.getInstance().getCurrentUser());
+            return;
+        }
+    }
+
 
     private void initLoginAccount() {
 
@@ -660,6 +670,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+
     }
 
     @Override
@@ -670,6 +682,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        checkSessionForUser();
+
     }
 
     @Override
