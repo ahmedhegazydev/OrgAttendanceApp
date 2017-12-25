@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 /**
@@ -22,6 +23,10 @@ public class Common {
 
     public Common(Context context) {
         this.context = context;
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     public void showToast(String message, int duration) {
@@ -41,7 +46,6 @@ public class Common {
 
     }
 
-
     public Animation createFadeInAnimation() {
 
         Animation fadeIn = new AlphaAnimation(0, 1);
@@ -51,7 +55,6 @@ public class Common {
         return fadeIn;
     }
 
-
     public Animation createFadeOutAnimation() {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
@@ -59,7 +62,7 @@ public class Common {
         fadeOut.setDuration(1000);
         return fadeOut;
     }
-    
+
     public Animation createSlideInLeftAnim(){
         Animation in = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
         return in;
@@ -70,9 +73,22 @@ public class Common {
         return out;
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    public TranslateAnimation slideToBottom(View view) {
+        TranslateAnimation animate = new TranslateAnimation(0, 0, 0, view.getHeight());
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.GONE);
+        return animate;
     }
 
+    public TranslateAnimation slideToTop(View view) {
+        TranslateAnimation animate = new TranslateAnimation(0, 0, view.getHeight(), 0);
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        view.setVisibility(View.VISIBLE);
+        return animate;
+    }
 
 }

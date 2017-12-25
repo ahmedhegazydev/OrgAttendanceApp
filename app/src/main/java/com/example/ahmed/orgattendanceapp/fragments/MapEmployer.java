@@ -16,12 +16,16 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
 import com.example.ahmed.orgattendanceapp.R;
 import com.example.ahmed.orgattendanceapp.activities.EmployerActivity;
+import com.example.ahmed.orgattendanceapp.common.Common;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -79,6 +83,13 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
     int PLACE_PICKER_REQUEST = 1;
     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
     Marker markerRegisteredPlace = null;
+    @BindView(R.id.btnRegisterThis)
+    Button btnRegisterThisPlace;
+    @BindView(R.id.btnSelectPlaceForCompany)
+    Button btnSelectThisPlaceForComp;
+    Common common = null;
+    boolean b = true;
+    Animation animSlideUp, animSlideDown, animSlideUp2, animSlideDown2;
     private Location lastLocation = null;
     private GoogleApiClient googleApiClient = null;
     private Marker markerCurrentLocation = null;
@@ -141,7 +152,7 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
             stopLocationUpdates();
     }
 
-    @OnClick(R.id.btnRegisterPlaceForCompany)
+    @OnClick(R.id.btnSelectPlaceForCompany)
     public void registerPlaceForComp(View v) {
         try {
             startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
@@ -200,6 +211,19 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
     @Override
     public void onCameraIdle() {
 
+        ibGetCurrentLoc.setVisibility(View.VISIBLE);
+        ibGetCurrentLoc.startAnimation(animSlideUp);
+
+        btnRegisterThisPlace.setVisibility(View.VISIBLE);
+        btnRegisterThisPlace.startAnimation(animSlideUp);
+
+
+        //btnSelectThisPlaceForComp.setVisibility(View.VISIBLE);
+        btnSelectThisPlaceForComp.startAnimation(common.slideToBottom(btnSelectThisPlaceForComp));
+
+        b = true;
+
+
     }
 
     @Override
@@ -209,16 +233,42 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
 
     @Override
     public void onCameraMove() {
+        if (ibGetCurrentLoc.getVisibility() == View.GONE) {
+            ibGetCurrentLoc.setVisibility(View.VISIBLE);
+        }
 
+        if (b) {
+            ibGetCurrentLoc.startAnimation(animSlideDown);
+            ibGetCurrentLoc.setVisibility(View.GONE);
+
+            btnRegisterThisPlace.startAnimation(animSlideDown);
+            btnRegisterThisPlace.setVisibility(View.GONE);
+
+            //btnSelectThisPlaceForComp.startAnimation(animSlideUp2);
+            //btnSelectThisPlaceForComp.setVisibility(View.GONE);
+            btnSelectThisPlaceForComp.startAnimation(common.slideToTop(btnSelectThisPlaceForComp));
+
+
+            b = false;
+        }
     }
 
     @Override
     public void onCameraMoveStarted(int i) {
 
+
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
+        onMapCliclAction(latLng);
+    }
+
+    private void onMapCliclAction(LatLng latLng) {
+        if (markerRegisteredPlace != null) markerRegisteredPlace.remove();
+        if (markerCurrentLocation != null) markerCurrentLocation.remove();
+        markerCurrentLocation = googleMap.addMarker(new MarkerOptions().title("My Company is here")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.company)).position(latLng));
 
     }
 
@@ -231,9 +281,18 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initVars(view);
+        initAnimations();
         checkLocationPermission();
         initMap(view, savedInstanceState);
 
+    }
+
+    private void initAnimations() {
+        animSlideDown = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
+        animSlideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+
+        animSlideDown2 = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down2);
+        animSlideUp2 = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up2);
     }
 
     private void initVars(View view) {
@@ -245,8 +304,11 @@ public class MapEmployer extends Fragment implements GoogleApiClient.OnConnectio
             @Override
             public void onClick(View v) {
                 setCurrentLocation(null);
+                ibGetCurrentLoc.setVisibility(View.GONE);
             }
         });
+
+        common = new Common(context);
 
 
     }

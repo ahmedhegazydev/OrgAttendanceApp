@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -49,7 +50,6 @@ import com.suke.widget.SwitchButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindAnim;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -111,10 +111,10 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUserEmail;
     @BindView(R.id.etUserPass)
     EditText etUserPass;
-    @BindAnim(R.anim.slide_in_right)
-    Animation animSlideIn;
-    @BindAnim(R.anim.slide_out_left)
-    Animation animSlideOut;
+    //    @BindAnim(R.anim.slide_in_right)
+//    Animation animSlideIn;
+//    @BindAnim(R.anim.slide_out_left)
+//    Animation animSlideOut;
     @BindView(R.id.btnLoginNow)
     Button btnLoginNow;
     @BindView(R.id.etUserEmailLogin)
@@ -174,6 +174,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
     String userType = "";
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

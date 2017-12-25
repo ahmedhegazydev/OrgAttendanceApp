@@ -27,7 +27,7 @@
 
 
     <Button
-        android:id="@+id/btnRegisterPlaceForCompany"
+        android:id="@+id/btnSelectPlaceForCompany"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -43,18 +43,19 @@
         />
 
     <Button
-        android:id="@+id/btnRgisterThis"
+        android:id="@+id/btnRegisterThis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
+        android:layout_alignParentRight="false"
+        android:layout_margin="10dp"
+        android:layout_toLeftOf="@id/btnGetMyLocationNow"
         android:background="@drawable/rounded_bg"
         android:padding="5dp"
         android:text="Register this"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 
 </RelativeLayout>
